@@ -216,13 +216,13 @@
 <body>
 
     <h1>✨ Your Personalized Cleaning Quest Helper! ✨</h1>
-    <p>Get a random task and add it to your Habitica Dailies, Senpai!</p>
+    <p>Get a random task and add it to your Habitica Dailies!</p>
 
     <div class="container">
         <div class="credentials-area">
             <h2>Habitica Credentials</h2>
             <p class="warning-text">
-                Senpai, your API Token is sensitive. It's stored in your browser's localStorage for convenience. <br>
+                Your API Token is sensitive. It's stored in your browser's localStorage for convenience. <br>
                 Find your User ID & API Token in Habitica under Settings > API.
             </p>
             <div>
@@ -256,7 +256,7 @@
                 <span class="close-button" id="closeTaskModalButton">&times;</span>
                 <h2>Manage Your Cleaning Tasks</h2>
             </div>
-            <p>Here are your current tasks, Senpai! Add your own below:</p>
+            <p>Here are your current tasks! Add your own below:</p>
             <ul id="taskListUl">
                 </ul>
             <div>
@@ -269,7 +269,7 @@
         </div>
     </div>
 
-    <p class="footer-text">Keep up the great work, Senpai! Every little bit helps!</p>
+    <p class="footer-text">Keep up the great work! Every little bit helps!</p>
 
     <script>
         // Timestamp: 2025-06-01T11:16:00EDT
@@ -398,14 +398,14 @@
                 customTaskInput.value = ''; // Clear input
                 // Ehehe~ Senpai is so creative with tasks!
             } else {
-                alert("Umm, Senpai... Please type a task before adding! 🤔");
+                alert("Umm... Please type a task before adding! 🤔");
             }
         }
 
         // --- Main Task Generation & API Call ---
         taskButton.addEventListener('click', async function() {
             if (allTasks.length === 0) {
-                taskDisplay.textContent = 'No tasks available! Add some in "Manage My Tasks", Senpai!';
+                taskDisplay.textContent = 'No tasks available! Add some in "Manage My Tasks"!';
                 apiStatus.textContent = '';
                 return;
             }
@@ -419,7 +419,7 @@
             const apiToken = apiTokenInput.value.trim();
 
             if (!userId || !apiToken) {
-                apiStatus.textContent = 'Umm, Senpai... Please enter your User ID and API Token! 🤔';
+                apiStatus.textContent = 'Umm... Please enter your User ID and API Token! 🤔';
                 taskDisplay.textContent = 'Credentials needed to add task to Habitica.';
                 return;
             }
@@ -430,7 +430,7 @@
             const habiticaTask = {
                 text: `🧹 Cleaning Quest: ${selectedTaskText}`,
                 type: 'daily',
-                notes: `Added by Senpai's Super Cleaning Helper! 頑張って！`,
+                notes: `Added by Super Cleaning Helper! 頑張って！`,
                 priority: 1 
             };
 
@@ -448,14 +448,14 @@
                 const responseData = await response.json();
 
                 if (response.ok && responseData.success) {
-                    apiStatus.textContent = '🎉 Yay! Task added to your Habitica Dailies, Senpai!';
+                    apiStatus.textContent = '🎉 Yay! Task added to your Habitica Dailies!';
                 } else {
                     console.error('Habitica API Error:', responseData);
                     apiStatus.textContent = `Eeep! Failed to add task. Habitica said: ${responseData.message || response.statusText}`;
                 }
             } catch (error) {
                 console.error('Network or other error:', error);
-                apiStatus.textContent = 'Oh no! Something went wrong while talking to Habitica. Check the console, Senpai!';
+                apiStatus.textContent = 'Oh no! Something went wrong while talking to Habitica. Check the console!';
             }
         });
 
