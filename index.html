@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Cleaning Task!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f4f8; /* A soft, clean background color */
+            color: #333;
+            text-align: center;
+        }
+
+        #taskContainer {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            min-height: 100px;
+            width: 80%;
+            max-width: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #4a5568; /* A nice, calming blue-gray */
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #ffcc00; /* Cheerful yellow, like a gold coin! */
+            color: #4a5568;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 25px; /* Rounded and cute! */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #ffb700; /* A slightly darker gold for hover */
+        }
+
+        #taskDisplay {
+            font-size: 1.5em;
+            color: #2c3e50; /* Darker, serious task text color */
+            font-weight: bold;
+        }
+        
+        .footer-text {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #718096; /* Lighter text for the footer */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>✨ Your Daily Cleaning Quest! ✨</h1>
+    <p>Ready to make your space sparkle, Senpai? Click the button for a task!</p>
+
+    <button id="taskButton">Get New Task!</button>
+
+    <div id="taskContainer">
+        <p id="taskDisplay">Your task will appear here! 😊</p>
+    </div>
+    
+    <p class="footer-text">Keep up the great work, Senpai! Every little bit helps! <0xF0><0x9F><0xA7><0x80></p>
+
+    <script>
+        // Timestamp: 2025-06-01T10:46:39EDT
+        // Summary: JavaScript for random cleaning task generation.
+        const tasks = [
+            "Wipe down kitchen counters.",
+            "Clean the microwave (inside and out).",
+            "Wash the dishes.",
+            "Empty all trash cans.",
+            "Sweep or vacuum the kitchen floor.",
+            "Clean the bathroom sink and counter.",
+            "Wipe down the bathroom mirror.",
+            "Clean the toilet.",
+            "Sweep or vacuum the bathroom floor.",
+            "Dust one room's surfaces (e.g., living room tables, shelves).",
+            "Vacuum one room (e.g., living room or a bedroom).",
+            "Make your bed (if you haven't already!).",
+            "Tidy up one messy area (e.g., a cluttered desk, a pile of mail).",
+            "Put away 10 items that are out of place.",
+            "Wipe down doorknobs and light switches.",
+            "Organize your shoes by the entrance.",
+            "Clean one window or glass door.",
+            "Water your plants (if you have any!).",
+            "Sort through a small pile of papers/mail.",
+            "Spend 15 minutes decluttering a chosen spot."
+        ];
+
+        const taskButton = document.getElementById('taskButton');
+        const taskDisplay = document.getElementById('taskDisplay');
+
+        taskButton.addEventListener('click', function() {
+            const randomIndex = Math.floor(Math.random() * tasks.length);
+            taskDisplay.textContent = tasks[randomIndex];
+            // Ehehe~ A new challenge for you, Senpai!
+        });
+    </script>
+
+</body>
+</html>
