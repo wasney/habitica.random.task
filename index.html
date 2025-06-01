@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Cleaning Task!</title>
+    <title>Daily Cleaning Task + Habitica!</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -13,76 +13,140 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #f0f4f8; /* A soft, clean background color */
+            background-color: #f0f4f8;
             color: #333;
             text-align: center;
+            padding: 20px;
         }
 
-        #taskContainer {
+        .container {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
-            min-height: 100px;
-            width: 80%;
-            max-width: 500px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+
+        .credentials-area, .task-area {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4a5568;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: #ffcc00;
+            color: #4a5568;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #ffb700;
+        }
+
+        #taskDisplayContainer {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        h1 {
-            color: #4a5568; /* A nice, calming blue-gray */
-            margin-bottom: 20px;
-        }
-
-        button {
-            background-color: #ffcc00; /* Cheerful yellow, like a gold coin! */
-            color: #4a5568;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            border-radius: 25px; /* Rounded and cute! */
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        button:hover {
-            background-color: #ffb700; /* A slightly darker gold for hover */
-        }
-
         #taskDisplay {
             font-size: 1.5em;
-            color: #2c3e50; /* Darker, serious task text color */
+            color: #2c3e50;
             font-weight: bold;
+        }
+
+        #apiStatus {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #718096;
+            min-height: 20px;
         }
         
         .footer-text {
             margin-top: 30px;
             font-size: 0.9em;
-            color: #718096; /* Lighter text for the footer */
+            color: #718096;
+        }
+
+        .warning-text {
+            color: #c0392b;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #fdd;
+            border: 1px solid #c0392b;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
     <h1>✨ Your Daily Cleaning Quest! ✨</h1>
-    <p>Ready to make your space sparkle, Senpai? Click the button for a task!</p>
+    <p>Get a random task and add it to your Habitica Dailies!</p>
 
-    <button id="taskButton">Get New Task!</button>
+    <div class="container">
+        <div class="credentials-area">
+            <h2>Habitica Credentials</h2>
+            <p class="warning-text">
+                Senpai, please be careful! Your API Token is sensitive. <br>
+                Find these in Habitica under Settings > API. This tool is for personal use.
+            </p>
+            <div>
+                <label for="userId">User ID:</label>
+                <input type="text" id="userId" placeholder="Your Habitica User ID">
+            </div>
+            <div>
+                <label for="apiToken">API Token:</label>
+                <input type="password" id="apiToken" placeholder="Your Habitica API Token">
+            </div>
+        </div>
 
-    <div id="taskContainer">
-        <p id="taskDisplay">Your task will appear here! 😊</p>
+        <div class="task-area">
+            <button id="taskButton">Get Task & Add to Habitica!</button>
+            <div id="taskDisplayContainer">
+                <p id="taskDisplay">Your task will appear here! 😊</p>
+            </div>
+            <p id="apiStatus"></p>
+        </div>
     </div>
     
     <p class="footer-text">Keep up the great work, Senpai! Every little bit helps! <0xF0><0x9F><0xA7><0x80></p>
 
     <script>
-        // Timestamp: 2025-06-01T10:46:39EDT
-        // Summary: JavaScript for random cleaning task generation.
+        // Timestamp: 2025-06-01T10:58:17EDT
+        // Summary: JavaScript for random cleaning task generation and Habitica API integration.
         const tasks = [
             "Wipe down kitchen counters.",
             "Clean the microwave (inside and out).",
@@ -108,11 +172,61 @@
 
         const taskButton = document.getElementById('taskButton');
         const taskDisplay = document.getElementById('taskDisplay');
+        const userIdInput = document.getElementById('userId');
+        const apiTokenInput = document.getElementById('apiToken');
+        const apiStatus = document.getElementById('apiStatus');
 
-        taskButton.addEventListener('click', function() {
+        taskButton.addEventListener('click', async function() {
+            // Get a random task
             const randomIndex = Math.floor(Math.random() * tasks.length);
-            taskDisplay.textContent = tasks[randomIndex];
-            // Ehehe~ A new challenge for you, Senpai!
+            const selectedTaskText = tasks[randomIndex];
+            taskDisplay.textContent = selectedTaskText;
+            apiStatus.textContent = 'Sending to Habitica...';
+
+            // Get credentials
+            const userId = userIdInput.value.trim();
+            const apiToken = apiTokenInput.value.trim();
+
+            if (!userId || !apiToken) {
+                apiStatus.textContent = 'Umm, Senpai... Please enter your User ID and API Token! 🤔';
+                taskDisplay.textContent = 'Credentials needed to add task to Habitica.';
+                return;
+            }
+
+            // Prepare the task data for Habitica
+            const habiticaTask = {
+                text: `🧹 Cleaning Quest: ${selectedTaskText}`, // Added a little prefix!
+                type: 'daily', // We want this to be a Daily task
+                notes: `Added by Senpai's Cleaning Helper!頑張って！`,
+                priority: 1 // Default priority (1 = Medium)
+            };
+
+            // Make the API call! Wish me luck, Senpai!
+            try {
+                const response = await fetch('https://habitica.com/api/v3/tasks/user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-user': userId,
+                        'x-api-key': apiToken,
+                        // 'x-client': 'your-app-name-if-you-have-one' // Good practice for official tools
+                    },
+                    body: JSON.stringify(habiticaTask)
+                });
+
+                const responseData = await response.json();
+
+                if (response.ok && responseData.success) {
+                    apiStatus.textContent = '🎉 Yay! Task added to your Habitica Dailies, Senpai!';
+                    // Ehehe~ Success! I did it for you!
+                } else {
+                    console.error('Habitica API Error:', responseData);
+                    apiStatus.textContent = `Eeep! Failed to add task. Habitica said: ${responseData.message || response.statusText} (Check console for details, Senpai!)`;
+                }
+            } catch (error) {
+                console.error('Network or other error:', error);
+                apiStatus.textContent = 'Oh no! Something went wrong while talking to Habitica. (Check console!)';
+            }
         });
     </script>
 
